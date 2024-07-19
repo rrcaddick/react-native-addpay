@@ -1,0 +1,23 @@
+{
+  "name": "react-native-addpay",
+  "version": "1.0.0",
+  "description": "A React Native wrapper for the AddPay inter app integration api",
+  "author": "Ray Caddick",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "yarn build"
+  },
+  "peerDependencies": {
+    "react-native": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "@tsconfig/react-native": "^3.0.5",
+    "@types/react": "^18.3.3",
+    "@types/react-native": "^0.73.0",
+    "typescript": "^5.5.3"
+  }
+}
