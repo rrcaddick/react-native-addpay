@@ -34,7 +34,7 @@ yarn add react-native-addpay
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-2. Ensure that the AddPay app is installed on the device.
+2. Ensure that the Wise Cashier app is installed on the device.
 
 ## Usage
 
@@ -42,45 +42,198 @@ Here's a basic example of how to use the package:
 
 ```javascript
 import AddPay from "react-native-addpay";
-// Sale Transaction
-const saleRequest = {
-  appId: "your_app_id",
-  transData: {
-    businessOrderNo: "202202222222",
-    paymentScenario: "CARD",
-    amt: "000000001000",
-    // ... other required fields
-  },
-};
 
-try {
-  const response = await AddPay.sale(saleRequest);
-  console.log("Sale successful:", response);
-} catch (error) {
-  console.error("Sale failed:", error);
+// Initialize AddPay with base configuration
+const addPay = new AddPay({
+  version: "A01",
+  appId: "your_app_id",
+  loginMode: "Login",
+  userId: "your_user_id",
+  userPassword: "your_password",
+});
+
+// Sale Transaction
+async function performSale() {
+  const saleData = {
+    businessOrderNo: "202202222222", // Required: Unique order number
+    paymentScenario: "CARD", // Required: CARD, SCANQR, BSCANQR, or CASH
+    amt: "000000001000", // Required: Amount in cents
+    paymentMethod: "Visa", // Optional: Specific for SCANQR or BSCANQR
+    POSMode: "1", // Optional: 1 for Integration mode, 2 for Standalone mode
+    note: "Sale transaction note", // Optional
+    notifyUrl: "https://your-notify-url.com", // Optional
+  };
+
+  try {
+    const response = await addPay.sale(saleData);
+    console.log("Sale successful:", response);
+  } catch (error) {
+    console.error(error.message);
+    // The error message will be in the format: "sale failed: [ErrorCode] ErrorMessage"
+  }
+}
+
+// Refund Transaction
+async function performRefund() {
+  const refundData = {
+    originBusinessOrderNo: "202202222222", // Required: Original sale order number
+    businessOrderNo: "202202222223", // Required: New unique order number for refund
+    amt: "000000001000", // Required: Refund amount in cents
+    paymentScenario: "CARD", // Required: CARD, SCANQR, BSCANQR, or CASH
+    refNo: "123456", // Required: Retrieval Reference Number
+    originTransDate: "20220222", // Required: Original transaction date YYYYMMDD
+    notifyUrl: "https://your-notify-url.com", // Optional
+  };
+
+  try {
+    const response = await addPay.refund(refundData);
+    console.log("Refund successful:", response);
+  } catch (error) {
+    console.error(error.message);
+    // The error message will be in the format: "refund failed: [ErrorCode] ErrorMessage"
+  }
+}
+
+// Example of overriding base configuration for a specific transaction
+async function saleWithOverride() {
+  const saleData = {
+    businessOrderNo: "202202222224",
+    paymentScenario: "CARD",
+    amt: "000000002000",
+  };
+
+  try {
+    const response = await addPay.sale(saleData, {
+      userId: "different_user",
+      userPassword: "different_password",
+    });
+    console.log("Sale with override successful:", response);
+  } catch (error) {
+    console.error("Sale with override failed:", error.message);
+  }
 }
 ```
 
 ## API Reference
 
-### Methods
+## Available Methods
 
-- `sale(request: SaleRequest): Promise<SaleResponse>`
-- `refund(request: RefundRequest): Promise<RefundResponse>`
-- `preAuth(request: PreAuthRequest): Promise<PreAuthResponse>`
-- `preAuthComp(request: PreAuthCompRequest): Promise<PreAuthCompResponse>`
-- `preAuthCancel(request: PreAuthCancelRequest): Promise<PreAuthCancelResponse>`
-- `settlement(request: SettlementRequest): Promise<SettlementResponse>`
-- `query(request: QueryRequest): Promise<QueryResponse>`
-- `print(request: PrintRequest): Promise<PrintResponse>`
-- `debiCheck(request: DebiCheckRequest): Promise<DebiCheckResponse>`
+The `AddPay` class provides the following methods:
+
+- `sale(transData: SaleTransData, overrides?: Partial<BaseRequest>): Promise<SaleResponse>`
+  Processes a sale transaction.
+
+- `refund(transData: RefundTransData, overrides?: Partial<BaseRequest>): Promise<RefundResponse>`
+  Processes a refund transaction.
+
+- `preAuth(transData: PreAuthTransData, overrides?: Partial<BaseRequest>): Promise<PreAuthResponse>`
+  Initiates a pre-authorization transaction.
+
+- `preAuthComp(transData: PreAuthCompTransData, overrides?: Partial<BaseRequest>): Promise<PreAuthCompResponse>`
+  Completes a pre-authorization transaction.
+
+- `preAuthCancel(transData: PreAuthCancelTransData, overrides?: Partial<BaseRequest>): Promise<PreAuthCancelResponse>`
+  Cancels a pre-authorization transaction.
+
+- `settlement(overrides?: Partial<BaseRequest>): Promise<SettlementResponse>`
+  Performs a settlement operation.
+
+- `query(transData: QueryTransData, overrides?: Partial<BaseRequest>): Promise<QueryResponse>`
+  Queries information about a transaction.
+
+- `print(transData: PrintTransData, overrides?: Partial<BaseRequest>): Promise<PrintResponse>`
+  Prints transaction information.
+
+- `debiCheck(transData: DebiCheckTransData, overrides?: Partial<BaseRequest>): Promise<DebiCheckResponse>`
+  Processes a DebiCheck transaction.
+
+Each method corresponds to a specific transaction type and returns a Promise that resolves with the response data or rejects with an error. The `overrides` parameter allows you to override base configuration settings for individual transactions if needed.
 
 For detailed type definitions of requests and responses, please refer to the [types documentation](./src/types.ts).
 
-## Troubleshooting
+## Error Handling
+
+All methods in the AddPay class will throw an error if the transaction fails. The error handling mechanism is designed to provide clear and consistent error information.
+
+### Error Format
+
+When an error occurs, it will be thrown with a message in the following format:
+
+"[MethodName] failed: [ErrorCode] ErrorMessage"
+
+- `MethodName`: The name of the method that was called (e.g., 'sale', 'refund', etc.)
+- `ErrorCode`: A code representing the specific error that occurred
+- `ErrorMessage`: A descriptive message providing more details about the error
+
+### Troubleshooting
 
 - **AddPay app not installed**: Ensure that the AddPay app is installed on the device.
-- **Transaction fails**: Check the error message returned. Common issues include incorrect app ID or insufficient permissions.
+- **Transaction fails**: Check the error code and message returned.
+
+It's recommended to always use try-catch blocks when calling these methods to handle potential errors. Here's an example:
+
+```javascript
+try {
+  const response = await addPay.sale(saleData);
+  console.log("Sale successful:", response);
+} catch (error) {
+  console.error("Sale failed:", error.message);
+  // Here you can access the error code and message if needed
+  // You might want to parse the error message to extract the error code
+}
+```
+
+### Common Error Codes
+
+While the specific error codes and messages will depend on the AddPay system, here are some common error codes you might encounter:
+
+- `01`: Refer to card issuer
+- `05`: Do not honor
+- `12`: Invalid transaction
+- `14`: Invalid card number
+- `41`: Lost card
+- `51`: Insufficient funds
+- `54`: Expired card
+- `55`: Incorrect PIN
+- `61`: Exceeds withdrawal amount limit
+- `62`: Restricted card
+- `65`: Exceeds withdrawal frequency limit
+- `91`: Issuer or switch is inoperative
+- `96`: System malfunction
+
+These are general examples and may not represent the exact codes used by AddPay. Always refer to the official AddPay documentation for the most accurate and up-to-date list of error codes and their meanings.
+
+Find the full list of code here:
+
+- https://developers.paycloud.africa/#/wisecashier/ResponseCode?id=response-code
+
+### Handling Errors
+
+When handling errors, you may want to check for specific error codes to provide more targeted error messages or to trigger specific actions in your application. For example:
+
+```javascript
+try {
+  const response = await addPay.sale(saleData);
+  console.log("Sale successful:", response);
+} catch (error) {
+  const errorMessage = error.message;
+  const errorCode = errorMessage.match(/\[(\d+)\]/)?.[1];
+
+  switch (errorCode) {
+    case "01":
+      console.error("Transaction referred to card issuer");
+      break;
+    case "51":
+      console.error("Insufficient funds");
+      break;
+    case "54":
+      console.error("Card has expired");
+      break;
+    default:
+      console.error("Transaction failed:", errorMessage);
+  }
+}
+```
 
 ## Contributing
 
@@ -100,3 +253,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ---
 
 Made with ❤️ by Ray Caddick
+
+```
+
+```

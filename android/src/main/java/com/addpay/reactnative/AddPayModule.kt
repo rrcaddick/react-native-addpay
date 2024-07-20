@@ -110,16 +110,12 @@ class AddPayModule(reactContext: ReactApplicationContext) : ReactContextBaseJava
                     val resultMsg = data.getStringExtra("resultMsg")
                     val transData = data.getStringExtra("transData")
 
-                    if (result == "00") {
-                        val responseMap = Arguments.createMap().apply {
-                            putString("result", result)
-                            putString("resultMsg", resultMsg)
-                            putString("transData", transData)
-                        }
-                        promise?.resolve(responseMap)
-                    } else {
-                        promise?.reject(result ?: "UNKNOWN_ERROR", resultMsg ?: "Unknown error occurred")
+                    val responseMap = Arguments.createMap().apply {
+                        putString("result", result)
+                        putString("resultMsg", resultMsg)
+                        putString("transData", transData)
                     }
+                    promise?.resolve(responseMap)
                 }
                 resultCode == Activity.RESULT_CANCELED -> {
                     promise?.reject("CANCELLED", "Transaction was cancelled by the user")

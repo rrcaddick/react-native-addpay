@@ -1,118 +1,130 @@
-// Request Types
 export interface BaseRequest {
   version: string;
   appId: string;
-  transType: string;
   loginMode?: "Login" | "LoginFree";
   userId?: string;
   userPassword?: string;
 }
 
-export interface SaleRequest extends BaseRequest {
-  transType: "SALE";
-  transData: {
-    businessOrderNo: string;
-    paymentScenario: "CARD" | "SCANQR" | "BSCANQR" | "CASH";
-    paymentMethod?: string;
-    amt: string;
-    POSMode?: "1" | "2";
-    note?: string;
-    notifyUrl?: string;
-  };
-}
-
-export interface RefundRequest extends BaseRequest {
-  transType: "REFUND";
-  transData: {
-    originBusinessOrderNo: string;
-    businessOrderNo: string;
-    amt: string;
-    paymentScenario: "CARD" | "SCANQR" | "BSCANQR" | "CASH";
-    refNo: string;
-    originTransDate: string;
-    notifyUrl?: string;
-  };
-}
-
-export interface PreAuthRequest extends BaseRequest {
-  transType: "PREAUTH";
-  transData: {
-    businessOrderNo: string;
-    paymentScenario: "CARD";
-    amt: string;
-    note?: string;
-    notifyUrl?: string;
-  };
-}
-
-export interface PreAuthCompRequest extends BaseRequest {
-  transType: "PREAUTHCOMP";
-  transData: {
-    businessOrderNo: string;
-    originBusinessOrderNo: string;
-    paymentScenario: "CARD";
-    amt: string;
-    authCode: string;
-    notifyUrl?: string;
-  };
-}
-
-export interface PreAuthCancelRequest extends BaseRequest {
-  transType: "PREAUTHCANCEL";
-  transData: {
-    businessOrderNo: string;
-    originBusinessOrderNo: string;
-    paymentScenario: "CARD";
-    amt: string;
-    authCode: string;
-    notifyUrl?: string;
-  };
-}
-
-export interface SettlementRequest extends BaseRequest {
-  transType: "SETTLEMENT";
-  transData?: {};
-}
-
-export interface QueryRequest extends BaseRequest {
-  transType: "QUERY";
-  transData: {
-    businessOrderNo: string;
-  };
-}
-
-export interface PrintRequest extends BaseRequest {
-  transType: "PRINT";
-  transData: {
-    businessOrderNo: string;
-  };
-}
-
-export interface DebiCheckRequest extends BaseRequest {
-  transType: "DEBICHECK";
-  transData: {
-    businessOrderNo: string;
-    contractReferenceNo: string;
-    accountNo: string;
-    debtorIdentificationNo: string;
-    creditorName: string;
-    installmentAmount: string;
-    maxCollectionAmount: string;
-    firstCollectionDate: string;
-    monthlyCollectDate: string;
-    POSMode?: "1" | "2";
-    note?: string;
-    notifyUrl?: string;
-  };
-}
-
-// Response Types
 export interface BaseResponse {
   version: string;
   transType: string;
   result: string;
   resultMsg?: string;
 }
+
+export interface SaleTransData {
+  businessOrderNo: string;
+  paymentScenario: "CARD" | "SCANQR" | "BSCANQR" | "CASH";
+  paymentMethod?: string;
+  amt: string;
+  POSMode?: "1" | "2";
+  note?: string;
+  notifyUrl?: string;
+}
+
+export interface RefundTransData {
+  originBusinessOrderNo: string;
+  businessOrderNo: string;
+  amt: string;
+  paymentScenario: "CARD" | "SCANQR" | "BSCANQR" | "CASH";
+  refNo: string;
+  originTransDate: string;
+  notifyUrl?: string;
+}
+
+export interface PreAuthTransData {
+  businessOrderNo: string;
+  paymentScenario: "CARD";
+  amt: string;
+  note?: string;
+  notifyUrl?: string;
+}
+
+export interface PreAuthCompTransData {
+  businessOrderNo: string;
+  originBusinessOrderNo: string;
+  paymentScenario: "CARD";
+  amt: string;
+  authCode: string;
+  notifyUrl?: string;
+}
+
+export interface PreAuthCancelTransData {
+  businessOrderNo: string;
+  originBusinessOrderNo: string;
+  paymentScenario: "CARD";
+  amt: string;
+  authCode: string;
+  notifyUrl?: string;
+}
+
+export interface SettlementTransData {}
+
+export interface QueryTransData {
+  businessOrderNo: string;
+}
+
+export interface PrintTransData {
+  businessOrderNo: string;
+}
+
+export interface DebiCheckTransData {
+  businessOrderNo: string;
+  contractReferenceNo: string;
+  accountNo: string;
+  debtorIdentificationNo: string;
+  creditorName: string;
+  installmentAmount: string;
+  maxCollectionAmount: string;
+  firstCollectionDate: string;
+  monthlyCollectDate: string;
+  POSMode?: "1" | "2";
+  note?: string;
+  notifyUrl?: string;
+}
+
+export type TransData =
+  | SaleTransData
+  | RefundTransData
+  | PreAuthTransData
+  | PreAuthCompTransData
+  | PreAuthCancelTransData
+  | SettlementTransData
+  | QueryTransData
+  | PrintTransData
+  | DebiCheckTransData;
+
+export enum TransType {
+  SALE = "SALE",
+  REFUND = "REFUND",
+  PREAUTH = "PREAUTH",
+  PREAUTHCOMP = "PREAUTHCOMP",
+  PREAUTHCANCEL = "PREAUTHCANCEL",
+  SETTLEMENT = "SETTLEMENT",
+  QUERY = "QUERY",
+  PRINT = "PRINT",
+  DEBICHECK = "DEBICHECK",
+}
+
+export enum AddPayMethodNames {
+  SALE = "sale",
+  REFUND = "refund",
+  PREAUTH = "preAuth",
+  PREAUTHCOMP = "preAuthComp",
+  PREAUTHCANCEL = "preAuthCancel",
+  SETTLEMENT = "settlement",
+  QUERY = "query",
+  PRINT = "print",
+  DEBICHECK = "debiCheck",
+}
+
+export type AddPayRequest = BaseRequest & {
+  transType: TransType;
+  transData: TransData;
+};
+
+// Response Types
 
 export interface SaleResponse extends BaseResponse {
   transType: "SALE";
