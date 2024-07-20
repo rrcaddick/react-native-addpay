@@ -3,6 +3,7 @@
 ![npm](https://img.shields.io/npm/v/react-native-addpay)
 ![license](https://img.shields.io/npm/l/react-native-addpay)
 ![downloads](https://img.shields.io/npm/dt/react-native-addpay)
+
 A React Native wrapper for AddPay integration (Android Only).
 
 ## ⚠️ Important Note
@@ -14,7 +15,7 @@ This package is designed for **Android devices only**. It will not function on i
 - [Installation](#installation)
 - [Usage](#usage)
 - [API Reference](#api-reference)
-- [Troubleshooting](#troubleshooting)
+- [Error Handling](#error-handling)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -187,19 +188,14 @@ try {
 
 While the specific error codes and messages will depend on the AddPay system, here are some common error codes you might encounter:
 
-- `01`: Refer to card issuer
-- `05`: Do not honor
-- `12`: Invalid transaction
-- `14`: Invalid card number
-- `41`: Lost card
-- `51`: Insufficient funds
-- `54`: Expired card
-- `55`: Incorrect PIN
-- `61`: Exceeds withdrawal amount limit
-- `62`: Restricted card
-- `65`: Exceeds withdrawal frequency limit
-- `91`: Issuer or switch is inoperative
-- `96`: System malfunction
+- `107`: Refer to card issuer
+- `100`: Do not honor
+- `902`: Invalid transaction
+- `111`: Invalid card number
+- `208`: Lost card
+- `113`: Unacceptable fee
+- `201`: Expired card
+- `117`: Incorrect PIN
 
 These are general examples and may not represent the exact codes used by AddPay. Always refer to the official AddPay documentation for the most accurate and up-to-date list of error codes and their meanings.
 
