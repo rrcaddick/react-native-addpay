@@ -2,10 +2,10 @@
   "name": "react-native-addpay",
   "version": "1.0.0",
   "description": "React Native wrapper for AddPay integration (Android Only!)",
-  "main": "src/index.ts",
+  "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
-    "src",
+    "lib",
     "android",
     "scripts"
   ],
@@ -38,6 +38,6 @@
     "@tsconfig/react-native": "^3.0.5",
     "@types/react": "^18.0.0",
     "@types/react-native": "^0.70.0",
-    "typescript": "^4.5.2"
+    "typescript": "^5.5.4"
   }
 }

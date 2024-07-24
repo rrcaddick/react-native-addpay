@@ -1,12 +1,18 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "declarationDir": "lib",
     "outDir": "lib",
-    "rootDir": "src"
+    "rootDir": "src",
+    "noEmit": false,
+    "skipLibCheck": true,
+    "jsx": "react-native",
+    "module": "commonjs",
+    "target": "es6",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "moduleSuffixes": [".ios", ".android", ".native", ""]
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "lib"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib", "**/__tests__/*"]
 }
