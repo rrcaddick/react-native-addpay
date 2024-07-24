@@ -2,8 +2,11 @@
   "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "./lib"
+    "emitDeclarationOnly": true,
+    "declarationDir": "lib",
+    "outDir": "lib",
+    "rootDir": "src"
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "exclude": ["node_modules", "lib"]
 }

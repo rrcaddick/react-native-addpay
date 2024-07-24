@@ -3,26 +3,39 @@
   "version": "1.0.0",
   "description": "React Native wrapper for AddPay integration (Android Only!)",
   "main": "src/index.ts",
-  "types": "src/index.ts",
+  "types": "lib/index.d.ts",
   "files": [
     "src",
-    "android"
+    "android",
+    "scripts"
   ],
   "scripts": {
-    "typescript": "tsc --noEmit",
+    "build": "tsc",
+    "prepare": "npm run build",
     "postinstall": "node scripts/postinstall.js"
   },
   "keywords": [
     "react-native",
-    "android"
+    "android",
+    "payment",
+    "addpay"
   ],
-  "author": "Ray Caddick <rrcaddick@gmail.com>",
   "license": "MIT",
+  "author": "Ray Caddick <rrcaddick@gmail.com>",
+  "homepage": "https://github.com/rrcaddick/react-native-addpay#readme",
+  "bugs": {
+    "url": "https://github.com/rrcaddick/react-native-addpay/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rrcaddick/react-native-addpay.git"
+  },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
   },
   "devDependencies": {
+    "@tsconfig/react-native": "^3.0.5",
     "@types/react": "^18.0.0",
     "@types/react-native": "^0.70.0",
     "typescript": "^4.5.2"
