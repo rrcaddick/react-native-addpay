@@ -1,4 +1,4 @@
-package com.addpay.reactnative
+package com.addpay
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

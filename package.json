@@ -1,6 +1,6 @@
 {
   "name": "react-native-addpay",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Native wrapper for AddPay integration (Android Only!)",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -18,7 +18,9 @@
     "react-native",
     "android",
     "payment",
-    "addpay"
+    "addpay",
+    "wise cashier",
+    "pos"
   ],
   "license": "MIT",
   "author": "Ray Caddick <rrcaddick@gmail.com>",

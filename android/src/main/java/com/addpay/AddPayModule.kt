@@ -1,4 +1,4 @@
-package com.addpay.reactnative
+package com.addpay
 
 import android.app.Activity
 import android.content.Intent
@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import org.json.JSONObject
+import android.util.Log
+import android.os.Bundle
 
 @ReactModule(name = AddPayModule.NAME)
 class AddPayModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), ActivityEventListener {
@@ -26,71 +28,76 @@ class AddPayModule(reactContext: ReactApplicationContext) : ReactContextBaseJava
 
     @ReactMethod
     fun sale(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("SALE", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun refund(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("REFUND", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun preAuth(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("PREAUTH", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun preAuthComp(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("PREAUTHCOMP", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun preAuthCancel(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("PREAUTHCANCEL", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun settlement(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("SETTLEMENT", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun query(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("QUERY", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun print(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("PRINT", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
     @ReactMethod
     fun debiCheck(request: ReadableMap, promise: Promise) {
-        launchAddPayIntent("DEBICHECK", request, promise)
+        launchAddPayIntent(request, promise)
     }
 
-    private fun launchAddPayIntent(transType: String, request: ReadableMap, promise: Promise) {
+    private fun launchAddPayIntent(request: ReadableMap, promise: Promise) {
         if (!isAddPayInstalled()) {
             promise.reject("APP_NOT_INSTALLED", "AddPay app is not installed on this device")
             return
         }
-
+    
         val intent = Intent().apply {
             setPackage(ADDPAY_PACKAGE)
-            action = ADDPAY_ACTION
-            putExtra("version", "A01")
-            putExtra("appId", request.getString("appId"))
-            putExtra("transType", transType)
+            setAction(ADDPAY_ACTION)
 
-            val jsonObject = JSONObject()
             request.toHashMap().forEach { (key, value) ->
-                if (key != "appId") {
-                    jsonObject.put(key, value)
+                when (key) {
+                    "transData" -> {
+                      val transDataMap = request.getMap("transData")
+                      val jsonObject = if (transDataMap != null) {
+                          JSONObject(transDataMap.toHashMap())
+                      } else {
+                          JSONObject()
+                      }
+                      putExtra(key, jsonObject.toString())
+                    }
+                    else -> putExtra(key, value.toString())
                 }
             }
-            putExtra("transData", jsonObject.toString())
+     
         }
-
+    
         currentPromise = promise
         try {
             reactApplicationContext.currentActivity?.startActivityForResult(intent, REQUEST_CODE)

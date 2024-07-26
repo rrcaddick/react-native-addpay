@@ -10,8 +10,7 @@
     "target": "es6",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "strict": true,
-    "moduleSuffixes": [".ios", ".android", ".native", ""]
+    "strict": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "lib", "**/__tests__/*"]

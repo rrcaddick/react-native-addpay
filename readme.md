@@ -48,13 +48,13 @@ import AddPay from "react-native-addpay";
 const addPay = new AddPay({
   version: "A01",
   appId: "your_app_id",
-  loginMode: "Login",
+  loginMode: "LoginFree",
   userId: "your_user_id",
   userPassword: "your_password",
 });
 
 // Sale Transaction
-async function performSale() {
+async function performExampleSale() {
   const saleData = {
     businessOrderNo: "202202222222", // Required: Unique order number
     paymentScenario: "CARD", // Required: CARD, SCANQR, BSCANQR, or CASH
@@ -75,7 +75,7 @@ async function performSale() {
 }
 
 // Refund Transaction
-async function performRefund() {
+async function performExampleRefund() {
   const refundData = {
     originBusinessOrderNo: "202202222222", // Required: Original sale order number
     businessOrderNo: "202202222223", // Required: New unique order number for refund
@@ -96,7 +96,7 @@ async function performRefund() {
 }
 
 // Example of overriding base configuration for a specific transaction
-async function saleWithOverride() {
+async function exampleSaleWithOverride() {
   const saleData = {
     businessOrderNo: "202202222224",
     paymentScenario: "CARD",
